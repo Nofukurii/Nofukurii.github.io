@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khitanan Nafatar | Undangan Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .navy-gradient {
+            background:
+                radial-gradient(circle at top, rgba(99,102,241,0.18), transparent 35%),
+                linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        }
+
+        .hero-bg {
+        position: relative;
+        background-image:
+            linear-gradient(rgba(30, 27, 75, 0.72), rgba(49, 46, 129, 0.82)),
+            url("./images/foto_bg.jpeg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle, transparent 0%, rgba(30, 27, 75, 0.35) 75%);
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+        .hero-bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 34%),
+                radial-gradient(circle at bottom, rgba(30, 27, 75, 0.35), rgba(30, 27, 75, 0.7));
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (min-width: 768px) {
+            .hero-bg {
+                background-attachment: fixed;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1e1b4b;
+            transition: opacity 0.6s ease;
+        }
+
+        .music-btn {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 80;
+            width: 48px;
+            height: 48px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.95);
+            color: #1e1b4b;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .hero-title {
+            text-shadow: 0 10px 35px rgba(0,0,0,0.25);
+        }
+    </style>
+</head>
+
+<body class="bg-indigo-950 text-indigo-50 min-h-screen">
+
+    <!-- BACKGROUND MUSIC -->
+    <!-- Ganti src di bawah dengan link file .mp3 langsung -->
+    <audio id="bgMusic" loop>
+        <source src="./audio/backsound-islami.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- OVERLAY PEMBUKA -->
+    <div id="overlay" class="overlay">
+        <div class="text-center px-6">
+            <p class="text-indigo-200 tracking-widest uppercase text-sm mb-5">
+                Undangan Khitanan
+            </p>
+
+            <h1 class="text-5xl md:text-7xl mb-8 text-white">
+                Nafatar
+            </h1>
+
+            <button id="openBtn"
+                class="bg-white text-indigo-900 px-9 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-lg">
+                Buka Undangan
+            </button>
+
+            <p class="text-indigo-200 text-sm mt-5">
+                Klik tombol untuk membuka undangan dan memutar musik
+            </p>
+        </div>
+    </div>
+
+    <!-- TOMBOL MUSIK -->
+    <button id="musicToggle" class="music-btn" title="Musik">
+        🔊
+    </button>
+
+    <!-- HALAMAN AWAL / HERO -->
+    <header class="hero-bg relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden">
+
+        <div class="hero-content max-w-3xl mx-auto fade-in visible">
+            <p class="text-indigo-100 tracking-[0.25em] uppercase text-sm md:text-base mb-6">
+                Undangan Khitanan
+            </p>
+
+            <h1 class="hero-title text-6xl md:text-8xl text-white mb-7 leading-tight">
+                Nafatar
+            </h1>
+
+            <p class="text-lg md:text-2xl text-indigo-50 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">
+                "Ya Allah, jadikanlah ia anak yang saleh, cerdas, dan bermanfaat bagi agama, orang tua, serta sesama."
+            </p>
+        </div>
+
+        <a href="#salam" class="absolute bottom-10 animate-bounce z-20">
+            <svg class="w-7 h-7 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3">
+                </path>
+            </svg>
+        </a>
+    </header>
+
+    <!-- SALAM -->
+    <section id="salam" class="py-20 px-6 max-w-4xl mx-auto text-center fade-in">
+        <h2 class="text-3xl mb-8">Salam Takzim</h2>
+
+        <p class="text-lg leading-relaxed mb-6">
+            Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang
+            Bapak/Ibu/Saudara/i untuk hadir dalam acara tasyakuran khitanan putra kami tercinta:
+        </p>
+
+        <div class="bg-white/5 p-8 rounded-3xl backdrop-blur-sm border border-white/10">
+            <h3 class="text-4xl text-indigo-200 mb-2">
+                Nafatar Alfarizqi Darmawan
+            </h3>
+
+            <p class="text-xl italic">(Nafatar)</p>
+
+            <p class="mt-6 text-indigo-300">Putra dari:</p>
+
+            <p class="font-semibold text-lg">
+                Bpk. Dadan Darmawan & Ibu Dewi Atikah
+            </p>
+        </div>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section class="py-20 px-6 navy-gradient text-center fade-in">
+        <h2 class="text-3xl mb-12">Menuju Hari Bahagia</h2>
+
+        <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            <div class="bg-white/10 p-4 rounded-xl">
+                <span id="days" class="text-4xl block font-bold">00</span>
+                <span class="text-xs uppercase">Hari</span>
+            </div>
+
+            <div class="bg-white/10 p-4 rounded-xl">
+                <span id="hours" class="text-4xl block font-bold">00</span>
+                <span class="text-xs uppercase">Jam</span>
+            </div>
+
+            <div class="bg-white/10 p-4 rounded-xl">
+                <span id="minutes" class="text-4xl block font-bold">00</span>
+                <span class="text-xs uppercase">Menit</span>
+            </div>
+
+            <div class="bg-white/10 p-4 rounded-xl">
+                <span id="seconds" class="text-4xl block font-bold">00</span>
+                <span class="text-xs uppercase">Detik</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- WAKTU & LOKASI -->
+    <section class="py-20 px-6 max-w-3xl mx-auto fade-in">
+        <h2 class="text-3xl mb-12 text-center">Waktu & Lokasi</h2>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <h4 class="font-bold text-indigo-300 mb-2">Tanggal</h4>
+                <p>Senin, 13 Juli 2026</p>
+
+                <h4 class="font-bold text-indigo-300 mt-4 mb-2">Waktu</h4>
+                <p>10:00 WIB s/d Selesai</p>
+            </div>
+
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <h4 class="font-bold text-indigo-300 mb-2">Lokasi</h4>
+                <p class="text-sm">
+                    Jalan Rancasawo Gang H Mursidi RT.03 RW.18 Kec. Buah Batu,
+                    Kel. Margasari, Kota Bandung, Jawa Barat.
+                </p>
+            </div>
+        </div>
+
+        <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 border border-white/10">
+            <iframe
+                src="https://www.google.com/maps?q=-6.9613968,107.6702843&z=18&output=embed"
+                class="w-full h-full"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>
+        </div>
+
+        <div class="text-center">
+            <a href="https://maps.app.goo.gl/4KtEQTcHrF5qHkso8" target="_blank"
+                class="inline-block bg-white text-indigo-900 px-8 py-3 rounded-full font-semibold hover:bg-indigo-100 transition">
+                Buka Google Maps
+            </a>
+        </div>
+    </section>
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const openBtn = document.getElementById('openBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+
+        let isPlaying = false;
+
+        openBtn.addEventListener('click', function () {
+            overlay.style.opacity = '0';
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 600);
+
+            bgMusic.play()
+            .then(() => {
+                isPlaying = true;
+                musicToggle.innerText = '🔊';
+                musicToggle.style.display = 'flex';
+            })
+            .catch(() => {
+                isPlaying = false;
+                musicToggle.innerText = '🔇';
+                musicToggle.style.display = 'flex';
+            });
+        });
+
+        musicToggle.addEventListener('click', function () {
+        if (isPlaying) {
+            bgMusic.pause();
+            isPlaying = false;
+            musicToggle.innerText = '🔇';
+        } else {
+            bgMusic.play();
+            isPlaying = true;
+            musicToggle.innerText = '🔊';
+        }
+        });
+
+        // Countdown
+        const targetDate = new Date("2026-07-13T10:00:00").getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML =
+                    "<p class='col-span-4 text-xl'>Acara sedang berlangsung atau telah selesai.</p>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = String(days).padStart(2, '0');
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // Animasi saat scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+    </body>
+</html>
