@@ -1,9 +1,0 @@
-.hero-bg {
-    position: relative;
-    background-image:
-        linear-gradient(rgba(30, 27, 75, 0.72), rgba(49, 46, 129, 0.82)),
-        url("./images/foto_bg.jpeg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
