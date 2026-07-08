@@ -125,7 +125,7 @@
     <!-- BACKGROUND MUSIC -->
     <!-- Ganti src di bawah dengan link file .mp3 langsung -->
     <audio id="bgMusic" loop>
-        <source src="audio/backsound-islami.mp3" type="audio/mpeg">
+        <source src="./audio/backsound-islami.mp3" type="audio/mpeg">
     </audio>
 
     <!-- OVERLAY PEMBUKA -->
@@ -272,7 +272,138 @@
         </div>
     </section>
 
-    <script>
+
+
+    <!-- RSVP KE EXCEL / GOOGLE SHEETS -->
+    <section id="rsvp" class="py-20 px-6 navy-gradient fade-in">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl mb-4 text-center">Konfirmasi Kehadiran</h2>
+            <p class="text-indigo-200 text-center mb-10">
+                Mohon isi konfirmasi kehadiran. 
+            </p>
+
+            <form id="rsvpForm" class="bg-white/5 p-6 md:p-8 rounded-3xl border border-white/10 backdrop-blur-sm space-y-5">
+                <div>
+                    <label for="rsvpNama" class="block mb-2 font-semibold text-indigo-200">Nama Tamu</label>
+                    <input id="rsvpNama" name="nama" type="text" required
+                        class="w-full rounded-xl px-4 py-3 bg-white/10 border border-white/10 text-white placeholder-indigo-200 outline-none focus:ring-2 focus:ring-indigo-300"
+                        placeholder="Masukkan nama Anda">
+                </div>
+
+                <div>
+                    <label for="rsvpJumlah" class="block mb-2 font-semibold text-indigo-200">Jumlah yang Hadir</label>
+                    <input id="rsvpJumlah" name="jumlah" type="number" min="1" required
+                        class="w-full rounded-xl px-4 py-3 bg-white/10 border border-white/10 text-white placeholder-indigo-200 outline-none focus:ring-2 focus:ring-indigo-300"
+                        placeholder="Contoh: 2">
+                </div>
+
+                <div>
+                    <label for="rsvpKehadiran" class="block mb-2 font-semibold text-indigo-200">Status Kehadiran</label>
+                    <select id="rsvpKehadiran" name="status" required
+                        class="w-full rounded-xl px-4 py-3 bg-indigo-950 border border-white/10 text-white outline-none focus:ring-2 focus:ring-indigo-300">
+                        <option value="">Pilih status kehadiran</option>
+                        <option value="Hadir">Hadir</option>
+                        <option value="Tidak Hadir">Tidak Hadir</option>
+                        <option value="Belum Pasti">Belum Pasti</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="rsvpPesan" class="block mb-2 font-semibold text-indigo-200">Pesan Singkat</label>
+                    <textarea id="rsvpPesan" name="pesan" rows="3"
+                        class="w-full rounded-xl px-4 py-3 bg-white/10 border border-white/10 text-white placeholder-indigo-200 outline-none focus:ring-2 focus:ring-indigo-300"
+                        placeholder="Opsional, contoh: Insya Allah hadir."></textarea>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-white text-indigo-900 px-8 py-3 rounded-full font-bold hover:bg-indigo-100 transition">
+                    Kirim 
+                </button>
+
+                <p id="rsvpMessage" class="text-center text-sm text-indigo-200"></p>
+            </form>
+        </div>
+    </section>
+
+    <!-- UCAPAN SELAMAT & DOA -->
+    <section id="ucapan" class="py-20 px-6 max-w-3xl mx-auto fade-in">
+        <h2 class="text-3xl mb-4 text-center">Ucapan Selamat & Doa</h2>
+        <p class="text-indigo-200 text-center mb-10">
+            Tuliskan doa terbaik untuk Nafatar. Ucapan akan tersimpan dan tampil di halaman ini.
+        </p>
+
+        <form id="wishForm" class="bg-white/5 p-6 md:p-8 rounded-3xl border border-white/10 backdrop-blur-sm space-y-5 mb-8">
+            <div>
+                <label for="wishNama" class="block mb-2 font-semibold text-indigo-200">Nama</label>
+                <input id="wishNama" type="text" required
+                    class="w-full rounded-xl px-4 py-3 bg-white/10 border border-white/10 text-white placeholder-indigo-200 outline-none focus:ring-2 focus:ring-indigo-300"
+                    placeholder="Masukkan nama Anda">
+            </div>
+
+            <div>
+                <label for="wishText" class="block mb-2 font-semibold text-indigo-200">Ucapan / Doa</label>
+                <textarea id="wishText" rows="4" required
+                    class="w-full rounded-xl px-4 py-3 bg-white/10 border border-white/10 text-white placeholder-indigo-200 outline-none focus:ring-2 focus:ring-indigo-300"
+                    placeholder="Tulis ucapan dan doa terbaik..."></textarea>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-white text-indigo-900 px-8 py-3 rounded-full font-bold hover:bg-indigo-100 transition">
+                Kirim Ucapan
+            </button>
+
+            <p id="wishMessage" class="text-center text-sm text-indigo-200"></p>
+        </form>
+
+        <div id="wishList" class="space-y-4"></div>
+    </section>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import {
+            initializeFirestore,
+            collection,
+            addDoc,
+            serverTimestamp,
+            query,
+            orderBy,
+            limit,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        // ================================
+        // KONFIGURASI FIREBASE UNTUK UCAPAN
+        // ================================
+        // Ganti isi firebaseConfig dengan konfigurasi dari Firebase Console.
+        // Firebase Console > Project Settings > General > Your apps > Web app > SDK setup and configuration.
+        const firebaseConfig = {
+            apiKey: "AIzaSyA87V19dllx1jmjIWHWLbYzjtdgFNo_8bc",
+            authDomain: "undangankhitanan-9a1a3.firebaseapp.com",
+            projectId: "undangankhitanan-9a1a3",
+            storageBucket: "undangankhitanan-9a1a3.firebasestorage.app",
+            messagingSenderId: "358609996827",
+            appId: "1:358609996827:web:70602abeeef83c24aafcbe",
+            measurementId: "G-K9FT6087ZG"
+        };
+
+        const isFirebaseConfigured = Boolean(
+            firebaseConfig.apiKey &&
+            firebaseConfig.projectId &&
+            !firebaseConfig.apiKey.includes("ISI_") &&
+            !firebaseConfig.projectId.includes("ISI_")
+        );
+
+        // Database Firestore kamu memakai Database ID: collection
+        // Penting: karena database kamu bukan (default), databaseId harus dimasukkan saat inisialisasi Firestore.
+        const FIRESTORE_DATABASE_ID = "collection";
+
+        const app = initializeApp(firebaseConfig);
+
+        // Pakai named database + long polling agar koneksi lebih stabil saat testing lokal.
+        const db = initializeFirestore(app, {
+            experimentalForceLongPolling: true
+        }, FIRESTORE_DATABASE_ID);
+
         const overlay = document.getElementById('overlay');
         const openBtn = document.getElementById('openBtn');
         const bgMusic = document.getElementById('bgMusic');
@@ -311,6 +442,166 @@
             musicToggle.innerText = '🔊';
         }
         });
+
+
+
+// ================================
+// RSVP MASUK KE EXCEL / GOOGLE SHEETS
+// ================================
+
+const RSVP_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyEirnCdErTmkPD3bOtaCGE-gbWqxcuK-D-DdGzVHwrjqIBZql_PVr_lJTwrKRo5Vks/exec";
+
+const rsvpForm = document.getElementById('rsvpForm');
+const rsvpMessage = document.getElementById('rsvpMessage');
+
+rsvpForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (!RSVP_WEB_APP_URL || RSVP_WEB_APP_URL.includes("PASTE_WEB_APP_URL")) {
+        rsvpMessage.innerText = "URL Google Apps Script belum diisi.";
+        rsvpMessage.className = "text-center text-sm text-yellow-300";
+        return;
+    }
+
+    const formData = new FormData(rsvpForm);
+    formData.append('waktu_kirim', new Date().toLocaleString('id-ID'));
+
+    const rsvpButton = rsvpForm.querySelector('button[type="submit"]');
+
+    rsvpMessage.innerText = "Pesan sedang dikirim...";
+    rsvpMessage.className = "text-center text-sm text-indigo-200";
+
+    rsvpButton.disabled = true;
+    rsvpButton.innerText = "Mengirim...";
+
+    try {
+        fetch(RSVP_WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams(formData)
+        });
+
+        setTimeout(() => {
+            rsvpMessage.innerText = "Pesan berhasil dikirim. Terima kasih.";
+            rsvpMessage.className = "text-center text-sm text-green-300";
+
+            rsvpForm.reset();
+
+            rsvpButton.disabled = false;
+            rsvpButton.innerText = "Kirim";
+        }, 1500);
+
+    } catch (error) {
+        rsvpMessage.innerText = "Pesan gagal dikirim. Silakan coba lagi.";
+        rsvpMessage.className = "text-center text-sm text-red-300";
+
+        rsvpButton.disabled = false;
+        rsvpButton.innerText = "Kirim";
+    }
+});
+
+        // ================================
+        // UCAPAN SELAMAT & DOA TERSIMPAN DI FIREBASE FIRESTORE
+        // ================================
+        const wishForm = document.getElementById('wishForm');
+        const wishNama = document.getElementById('wishNama');
+        const wishText = document.getElementById('wishText');
+        const wishList = document.getElementById('wishList');
+        const wishMessage = document.getElementById('wishMessage');
+        const WISH_COLLECTION = 'wishes';
+
+        function setWishMessage(text, colorClass = 'text-indigo-200') {
+            wishMessage.innerText = text;
+            wishMessage.className = `text-center text-sm ${colorClass}`;
+        }
+
+        function showEmptyWishMessage(text = 'Belum ada ucapan. Jadilah yang pertama memberikan doa terbaik.') {
+            wishList.innerHTML = `
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 text-center text-indigo-200">
+                    ${text}
+                </div>
+            `;
+        }
+
+        function renderFirebaseWishes() {
+            if (!isFirebaseConfigured || !db) {
+                showEmptyWishMessage('Firebase belum dikonfigurasi. Isi firebaseConfig terlebih dahulu agar ucapan bisa tersimpan online.');
+                setWishMessage('Firebase belum dikonfigurasi. Ganti isi firebaseConfig di kode HTML.', 'text-yellow-300');
+                return;
+            }
+
+            const wishesQuery = query(
+                collection(db, WISH_COLLECTION),
+                orderBy('createdAt', 'desc'),
+                limit(30)
+            );
+
+            onSnapshot(wishesQuery, (snapshot) => {
+                wishList.innerHTML = '';
+
+                if (snapshot.empty) {
+                    showEmptyWishMessage();
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const wish = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'bg-white/5 border border-white/10 rounded-2xl p-5';
+                    item.innerHTML = `
+                        <h4 class="font-bold text-indigo-200 mb-2"></h4>
+                        <p class="text-indigo-50 leading-relaxed"></p>
+                        <p class="text-xs text-indigo-300 mt-3"></p>
+                    `;
+
+                    item.querySelector('h4').innerText = wish.nama || 'Tamu';
+                    item.querySelector('p').innerText = wish.ucapan || '';
+                    item.querySelectorAll('p')[1].innerText = wish.waktu || '';
+
+                    wishList.appendChild(item);
+                });
+            }, (error) => {
+                console.error(error);
+                showEmptyWishMessage('Gagal memuat ucapan dari Firebase. Periksa konfigurasi Firebase dan Firestore Rules.');
+                setWishMessage('Gagal memuat data ucapan dari Firebase.', 'text-red-300');
+            });
+        }
+
+        wishForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!isFirebaseConfigured || !db) {
+                setWishMessage('Firebase belum aktif. Periksa firebaseConfig.', 'text-yellow-300');
+                return;
+            }
+
+            const nama = wishNama.value.trim();
+            const ucapan = wishText.value.trim();
+
+            if (!nama || !ucapan) {
+                setWishMessage('Nama dan ucapan wajib diisi.', 'text-yellow-300');
+                return;
+            }
+
+            setWishMessage('Mengirim ucapan...', 'text-indigo-200');
+
+            try {
+                await addDoc(collection(db, WISH_COLLECTION), {
+                    nama: nama,
+                    ucapan: ucapan,
+                    waktu: new Date().toLocaleString('id-ID'),
+                    createdAt: serverTimestamp()
+                });
+
+                wishForm.reset();
+                setWishMessage('Ucapan berhasil dikirim. Terima kasih.', 'text-green-300');
+            } catch (error) {
+                console.error('Firebase error:', error);
+                setWishMessage('Ucapan gagal dikirim: ' + error.message, 'text-red-300');
+            }
+        });
+
+        renderFirebaseWishes();
 
         // Countdown
         const targetDate = new Date("2026-07-13T10:00:00").getTime();
